@@ -1,6 +1,7 @@
 '''
 Flask Application
 '''
+from dataclasses import asdict
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
 
@@ -39,7 +40,7 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
-@app.route('/resume/experience', methods=['GET', 'POST'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
 def experience():
     '''
     Handle experience requests
@@ -48,7 +49,24 @@ def experience():
         return jsonify()
 
     if request.method == 'POST':
-        return jsonify({})
+        request_data = request.get_json()
+        new_experience = Experience(**request_data)
+        data["experience"].append(new_experience)
+        return jsonify(experience=asdict(new_experience), id=len(data) - 1), 201
+    
+    if request.method == 'PUT':
+        request_data = request.get_json()
+        experience_id = request_data["id"]
+
+        # Ensure the experience list is large enough to accommodate the ID
+        if experience_id >= len(data['experience']):
+            return jsonify({"error": "Invalid ID"}), 404
+
+        # Update the experience entry at the specified index
+        updated_experience = Experience(**request_data['experience'])
+        data['experience'][experience_id] = updated_experience
+
+        return jsonify(id=experience_id, experience=updated_experience), 200
 
     return jsonify({})
 
