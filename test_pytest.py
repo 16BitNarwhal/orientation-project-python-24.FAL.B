@@ -162,4 +162,4 @@ def test_post_skill_missing_fields():
                             json=incomplete_skill,
                             content_type='application/json')
     assert response.status_code == 400
-    assert 'error' in response.json
+    assert 'error' in response.jso
