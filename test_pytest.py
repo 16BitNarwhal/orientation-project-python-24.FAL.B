@@ -33,7 +33,16 @@ def test_experience():
     response = app.test_client().get('/resume/experience')
     assert response.json[item_id] == example_experience
 
+def test_experience_delete_all(): 
+    """
+    Test the successful deletion of all education entries.
+    """
+    response = app.test_client().delete('/resume/experience')
+    assert response.status_code == 204
 
+    response_items = app.test_client().get('/resume/experience')
+    assert response_items.json == None
+    
 def test_education():
     '''
     Add a new education and then get all educations. 

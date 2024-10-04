@@ -39,7 +39,7 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
-@app.route('/resume/experience', methods=['GET', 'POST'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'DELETE'])
 def experience():
     '''
     Handle experience requests
@@ -49,6 +49,10 @@ def experience():
 
     if request.method == 'POST':
         return jsonify({})
+    
+    if request.method == 'DELETE':
+        data["experience"] = []
+        return jsonify(), 204
 
     return jsonify({})
 
