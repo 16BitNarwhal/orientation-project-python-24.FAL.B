@@ -58,7 +58,10 @@ def education():
     Handles education requests
     '''
     if request.method == 'GET':
-        return jsonify(data['education'])
+        index = request.args.get('index',type=int)
+        if index and 0 <= index < len(data['experience']):
+            return jsonify(data['experience'][index])
+        return jsonify(data['experience'])
 
     if request.method == 'POST':
         return jsonify({})
