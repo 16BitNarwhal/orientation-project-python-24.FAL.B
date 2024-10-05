@@ -45,7 +45,7 @@ def experience():
     Handle experience requests
     '''
     if request.method == 'GET':
-        return jsonify()
+        return jsonify(data['experience'])
 
     if request.method == 'POST':
         return jsonify({})
@@ -58,7 +58,7 @@ def education():
     Handles education requests
     '''
     if request.method == 'GET':
-        return jsonify({})
+        return jsonify(data['education'])
 
     if request.method == 'POST':
         return jsonify({})
@@ -72,7 +72,7 @@ def skill():
     Handles Skill requests
     '''
     if request.method == 'GET':
-        return jsonify({})
+        return jsonify(data['skill'])
 
     if request.method == 'POST':
         return jsonify({})
