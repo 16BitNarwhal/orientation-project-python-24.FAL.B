@@ -45,6 +45,9 @@ def experience():
     Handle experience requests
     '''
     if request.method == 'GET':
+        index = request.args.get('index', type=int)
+        if index and 0 <= index < len(data['experience']):
+            return jsonify(data['experience'][index])
         return jsonify(data['experience'])
 
     if request.method == 'POST':
@@ -58,6 +61,9 @@ def education():
     Handles education requests
     '''
     if request.method == 'GET':
+        index = request.args.get('index', type=int)
+        if index and 0 <= index < len(data['education']):
+            return jsonify(data['education'][index])
         return jsonify(data['education'])
 
     if request.method == 'POST':
@@ -72,6 +78,9 @@ def skill():
     Handles Skill requests
     '''
     if request.method == 'GET':
+        index = request.args.get('index', type=int)
+        if index and 0 <= index < len(data['skill']):
+            return jsonify(data['skill'][index])
         return jsonify(data['skill'])
 
     if request.method == 'POST':
