@@ -55,7 +55,7 @@ def experience():
 
     return jsonify({})
 
-@app.route('/resume/education', methods=['GET', 'POST'])
+@app.route('/resume/education', methods=['GET', 'POST', 'PUT'])
 def education():
     '''
     Handles education requests
@@ -69,10 +69,19 @@ def education():
     if request.method == 'POST':
         return jsonify({})
 
+    if request.method == 'PUT':
+        request_data = request.get_json()
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['education']):
+            updated_education = Education(**request_data)
+            data['education'][index] = updated_education
+            return jsonify(id=index, experience=updated_education), 200
+        return jsonify({"error": "Invalid ID"}), 404
+
     return jsonify({})
 
 
-@app.route('/resume/skill', methods=['GET', 'POST'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
 def skill():
     '''
     Handles Skill requests
@@ -85,5 +94,14 @@ def skill():
 
     if request.method == 'POST':
         return jsonify({})
+
+    if request.method == 'PUT':
+        request_data = request.get_json()
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['skill']):
+            updated_skill = Education(**request_data)
+            data['skill'][index] = updated_skill
+            return jsonify(id=index, experience=updated_skill), 200
+        return jsonify({"error": "Invalid ID"}), 404
 
     return jsonify({})
