@@ -76,14 +76,12 @@ def education():
             updated_education = Education(**request_data)
             data['education'][index] = updated_education
             return jsonify(id=index, experience=updated_education), 200
-        return jsonify({"error": "Invalid ID"}), 404
 
     if request.method == 'DELETE':
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['education']):
             deleted_education = data['education'].pop(index)
             return jsonify(deleted_education), 200
-        return jsonify({'error': 'Education not found'}), 404
 
     return jsonify({})
 
@@ -109,13 +107,11 @@ def skill():
             updated_skill = Education(**request_data)
             data['skill'][index] = updated_skill
             return jsonify(id=index, experience=updated_skill), 200
-        return jsonify({"error": "Invalid ID"}), 404
 
     if request.method == 'DELETE':
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['skill']):
             deleted_skill = data['skill'].pop(index)
             return jsonify(deleted_skill), 200
-        return jsonify({'error': 'Skills not found'}), 404
 
     return jsonify({})

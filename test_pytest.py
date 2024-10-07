@@ -135,7 +135,7 @@ def test_edit_skill():
     assert response.json['experience'] == updated_skill
     assert response.json['id'] == item_id
     assert response.status_code == 200
-    
+
 def test_skills_delete_index():
     """
     Test the successful deletion of skills entries at index.
