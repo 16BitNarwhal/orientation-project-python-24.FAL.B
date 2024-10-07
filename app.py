@@ -46,7 +46,7 @@ def experience():
     '''
     if request.method == 'GET':
         index = request.args.get('index', type=int)
-        if index and 0 <= index < len(data['experience']):
+        if index is not None and 0 <= index < len(data['experience']):
             return jsonify(data['experience'][index])
         return jsonify(data['experience'])
 
@@ -55,14 +55,14 @@ def experience():
 
     return jsonify({})
 
-@app.route('/resume/education', methods=['GET', 'POST', 'PUT'])
+@app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():
     '''
     Handles education requests
     '''
     if request.method == 'GET':
         index = request.args.get('index', type=int)
-        if index and 0 <= index < len(data['education']):
+        if index is not None and 0 <= index < len(data['education']):
             return jsonify(data['education'][index])
         return jsonify(data['education'])
 
@@ -76,19 +76,24 @@ def education():
             updated_education = Education(**request_data)
             data['education'][index] = updated_education
             return jsonify(id=index, experience=updated_education), 200
-        return jsonify({"error": "Invalid ID"}), 404
+
+    if request.method == 'DELETE':
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['education']):
+            deleted_education = data['education'].pop(index)
+            return jsonify(deleted_education), 200
 
     return jsonify({})
 
 
-@app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
     '''
     Handles Skill requests
     '''
     if request.method == 'GET':
         index = request.args.get('index', type=int)
-        if index and 0 <= index < len(data['skill']):
+        if index is not None and 0 <= index < len(data['skill']):
             return jsonify(data['skill'][index])
         return jsonify(data['skill'])
 
@@ -102,6 +107,11 @@ def skill():
             updated_skill = Education(**request_data)
             data['skill'][index] = updated_skill
             return jsonify(id=index, experience=updated_skill), 200
-        return jsonify({"error": "Invalid ID"}), 404
+
+    if request.method == 'DELETE':
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['skill']):
+            deleted_skill = data['skill'].pop(index)
+            return jsonify(deleted_skill), 200
 
     return jsonify({})
