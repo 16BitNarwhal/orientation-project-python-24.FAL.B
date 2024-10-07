@@ -1,6 +1,7 @@
 '''
 Flask Application
 '''
+from dataclasses import asdict
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
 
@@ -48,11 +49,19 @@ def experience():
         return jsonify()
 
     if request.method == 'POST':
-        return jsonify({})
+        request_data = request.get_json()
+        new_experience = Experience(**request_data)
+        data["experience"].append(new_experience)
+        return jsonify(experience=asdict(new_experience), id=len(data) - 1), 201
     
     if request.method == 'DELETE':
-        data["experience"] = []
-        return jsonify(), 204
+        experience_id = request.get_json()
+
+        if experience_id < 0 or experience_id >= len(data['experience']):
+            return jsonify({"error": "Invalid ID"}), 404
+
+        del data["experience"][experience_id]
+        return jsonify(id=experience_id), 204
 
     return jsonify({})
 
