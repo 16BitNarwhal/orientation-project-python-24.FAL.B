@@ -1,7 +1,6 @@
 '''
 Flask Application
 '''
-from dataclasses import asdict
 from typing import List, Dict, Any
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
