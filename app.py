@@ -105,11 +105,11 @@ def education():
 
     def handle_put():
         request_data = request.get_json()
-        index = request.args.get('index', type=int)
+        index = request_data.get('id') or request_data.get('index')
         if index is not None and 0 <= index < len(data['education']):
-            updated_education = Education(**request_data)
+            updated_education = Education(**request_data.get('education'))
             data['education'][index] = updated_education
-            return jsonify(id=index, experience=updated_education), 200
+            return jsonify(id=index, education=updated_education), 200
 
         return jsonify({}), 404
 
@@ -161,11 +161,11 @@ def skill():
 
     def handle_put():
         request_data = request.get_json()
-        index = request.args.get('index', type=int)
+        index = request_data.get('id') or request_data.get('index')
         if index is not None and 0 <= index < len(data['skill']):
-            updated_skill = Education(**request_data)
+            updated_skill = Skill(**request_data.get('skill'))
             data['skill'][index] = updated_skill
-            return jsonify(id=index, experience=updated_skill), 200
+            return jsonify(id=index, skill=updated_skill), 200
         return jsonify({}), 404
 
     def handle_delete():

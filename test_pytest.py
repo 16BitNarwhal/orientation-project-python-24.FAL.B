@@ -179,7 +179,7 @@ def test_edit_education():
         "logo": "example-logo.png"
     }
 
-    post_response = app.test_client().post('/resume/eudcation',
+    post_response = app.test_client().post('/resume/education',
                                      json=example_education)
     item_id = post_response.json['id']
 
@@ -193,8 +193,8 @@ def test_edit_education():
     }
 
     response = app.test_client().put('/resume/education',
-                                     json={"experience": updated_education, "id": item_id})
-    assert response.json['experience'] == updated_education
+                                     json={"education": updated_education, "id": item_id})
+    assert response.json['education'] == updated_education
     assert response.json['id'] == item_id
     assert response.status_code == 200
 
@@ -222,8 +222,8 @@ def test_edit_skill():
     }
 
     response = app.test_client().put('/resume/skill',
-                                     json={"experience": updated_skill, "id": item_id})
-    assert response.json['experience'] == updated_skill
+                                     json={"skill": updated_skill, "id": item_id})
+    assert response.json['skill'] == updated_skill
     assert response.json['id'] == item_id
     assert response.status_code == 200
 
