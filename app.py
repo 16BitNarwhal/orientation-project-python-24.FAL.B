@@ -55,7 +55,10 @@ def experience():
     Handle experience requests
     '''
     if request.method == 'GET':
-        return jsonify()
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['experience']):
+            return jsonify(data['experience'][index])
+        return jsonify(data['experience'])
 
     if request.method == 'POST':
         request_data = request.get_json()
@@ -74,13 +77,16 @@ def experience():
 
     return jsonify({}), 405
 
-@app.route('/resume/education', methods=['GET', 'POST'])
+@app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():
     '''
     Handles education requests
     '''
     if request.method == 'GET':
-        return jsonify({})
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['education']):
+            return jsonify(data['education'][index])
+        return jsonify(data['education'])
 
     if request.method == 'POST':
         request_data = request.get_json()
@@ -96,16 +102,33 @@ def education():
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
+    if request.method == 'PUT':
+        request_data = request.get_json()
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['education']):
+            updated_education = Education(**request_data)
+            data['education'][index] = updated_education
+            return jsonify(id=index, experience=updated_education), 200
+
+    if request.method == 'DELETE':
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['education']):
+            deleted_education = data['education'].pop(index)
+            return jsonify(deleted_education), 200
+
     return jsonify({}), 405
 
 
-@app.route('/resume/skill', methods=['GET', 'POST'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
     '''
     Handles Skill requests
     '''
     if request.method == 'GET':
-        return jsonify({})
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['skill']):
+            return jsonify(data['skill'][index])
+        return jsonify(data['skill'])
 
     if request.method == 'POST':
         request_data = request.get_json()
@@ -120,5 +143,19 @@ def skill():
             return jsonify(asdict(new_skill)), 201
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
+
+    if request.method == 'PUT':
+        request_data = request.get_json()
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['skill']):
+            updated_skill = Education(**request_data)
+            data['skill'][index] = updated_skill
+            return jsonify(id=index, experience=updated_skill), 200
+
+    if request.method == 'DELETE':
+        index = request.args.get('index', type=int)
+        if index is not None and 0 <= index < len(data['skill']):
+            deleted_skill = data['skill'].pop(index)
+            return jsonify(deleted_skill), 200
 
     return jsonify({}), 405
