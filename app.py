@@ -71,7 +71,7 @@ def experience():
         try:
             new_experience = Experience(**request_data)
             data["experience"].append(new_experience)
-            return jsonify(asdict(new_experience)), 201
+            return jsonify(experience=new_experience, id=len(data['experience'])-1), 201
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
@@ -99,7 +99,7 @@ def education():
         try:
             new_education = Education(**request_data)
             data["education"].append(new_education)
-            return jsonify(asdict(new_education)), 201
+            return jsonify(education=new_education, id=len(data['education'])-1), 201
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
@@ -121,13 +121,17 @@ def education():
 
         return jsonify({}), 404
 
-    handlers = {
+    methods = {
         'GET': handle_get,
         'POST': handle_post,
         'PUT': handle_put,
         'DELETE': handle_delete
     }
-    return handlers[request.method](), 405
+    handler = methods.get(request.method)
+    if handler:
+        return handler()
+
+    return jsonify({}), 405
 
 @app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
@@ -151,7 +155,7 @@ def skill():
         try:
             new_skill = Skill(**request_data)
             data["skill"].append(new_skill)
-            return jsonify(asdict(new_skill)), 201
+            return jsonify(skill=new_skill, id=len(data['skill'])-1), 201
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 

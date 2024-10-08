@@ -48,7 +48,7 @@ def test_experience_post_success():
     response = app.test_client().post('/resume/experience',
                            json=new_experience)
     assert response.status_code == 201
-    for key, value in response.json.items():
+    for key, value in response.json['experience'].items():
         assert new_experience[key] == value
 
 def test_experience_post_missing_fields():
@@ -100,7 +100,7 @@ def test_post_education_success():
                             json=new_education,
                             content_type='application/json')
     assert response.status_code == 201
-    for key, value in response.json.items():
+    for key, value in response.json['education'].items():
         assert new_education[key] == value
 
 def test_post_education_missing_fields():
@@ -148,7 +148,7 @@ def test_post_skill_success():
                             json=new_skill,
                             content_type='application/json')
     assert response.status_code == 201
-    for key, value in response.json.items():
+    for key, value in response.json['skill'].items():
         assert new_skill[key] == value
 
 def test_post_skill_missing_fields():
