@@ -37,7 +37,7 @@ def validate_fields(required_fields: List[str], request_data: Dict[str, Any]) ->
     Validate that all the required fields are present in the request data
     '''
     missing_fields = [field for field in required_fields if field not in request_data]
-    if missing_fields: 
+    if missing_fields:
         return False, f"Missing required fields: {', '.join(missing_fields)}"
     return True, ""
 
@@ -65,14 +65,14 @@ def experience():
         required_fields = ["title", "company", "start_date", "end_date", "description", "logo"]
         is_valid, error_mssg = validate_fields(required_fields, request_data)
 
-        if not is_valid: 
+        if not is_valid:
             return jsonify({"error": error_mssg}), 400
 
-        try: 
+        try:
             new_experience = Experience(**request_data)
             data["experience"].append(new_experience)
             return jsonify(asdict(new_experience)), 201
-        except TypeError as e: 
+        except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
     return jsonify({}), 405
@@ -95,7 +95,7 @@ def education():
 
         if not is_valid:
             return jsonify({"error": error_mssg}), 400
-        try: 
+        try:
             new_education = Education(**request_data)
             data["education"].append(new_education)
             return jsonify(asdict(new_education)), 201
@@ -118,7 +118,6 @@ def education():
 
     return jsonify({}), 405
 
-
 @app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
     '''
@@ -137,7 +136,7 @@ def skill():
 
         if not is_valid:
             return jsonify({"error": error_mssg}), 400
-        try: 
+        try:
             new_skill = Skill(**request_data)
             data["skill"].append(new_skill)
             return jsonify(asdict(new_skill)), 201

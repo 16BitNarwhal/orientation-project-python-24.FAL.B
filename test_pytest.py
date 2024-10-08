@@ -59,7 +59,7 @@ def test_experience_post_missing_fields():
         "title": "Data Engineer",
         "company": "Google"
     }
-    response = app.test_client().post('/resume/experience', 
+    response = app.test_client().post('/resume/experience',
                            json=incomplete_experience)
     assert response.status_code == 400
     assert 'error' in response.json
@@ -96,7 +96,7 @@ def test_post_education_success():
         "grade": "3.8 GPA",
         "logo": "tech-uni-logo.png"
     }
-    response = app.test_client().post('/resume/education', 
+    response = app.test_client().post('/resume/education',
                             json=new_education,
                             content_type='application/json')
     assert response.status_code == 201
@@ -111,7 +111,7 @@ def test_post_education_missing_fields():
         "course": "PhD in Computer Science",
         "school": "Cornell University"
     }
-    response = app.test_client().post('/resume/education', 
+    response = app.test_client().post('/resume/education',
                             json=incomplete_education,
                             content_type='application/json')
     assert response.status_code == 400
@@ -144,7 +144,7 @@ def test_post_skill_success():
         "proficiency": "3-4 Years",
         "logo": "js-logo.png"
     }
-    response = app.test_client().post('/resume/skill', 
+    response = app.test_client().post('/resume/skill',
                             json=new_skill,
                             content_type='application/json')
     assert response.status_code == 201
@@ -158,7 +158,7 @@ def test_post_skill_missing_fields():
     incomplete_skill = {
         "name": "JavaScript"
     }
-    response = app.test_client().post('/resume/skill', 
+    response = app.test_client().post('/resume/skill',
                             json=incomplete_skill,
                             content_type='application/json')
     assert response.status_code == 400
@@ -284,4 +284,3 @@ def test_education_delete_index():
 
     response_items = app.test_client().get('/resume/education')
     assert response_items.json is None
-    
