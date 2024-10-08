@@ -82,13 +82,14 @@ def education():
     '''
     Handles education requests
     '''
-    if request.method == 'GET':
+
+    def handle_get():
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['education']):
             return jsonify(data['education'][index])
         return jsonify(data['education'])
 
-    if request.method == 'POST':
+    def handle_post():
         request_data = request.get_json()
         required_fields = ["course", "school", "start_date", "end_date", "grade", "logo"]
         is_valid, error_mssg = validate_fields(required_fields, request_data)
@@ -102,7 +103,7 @@ def education():
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
-    if request.method == 'PUT':
+    def handle_put():
         request_data = request.get_json()
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['education']):
@@ -110,26 +111,37 @@ def education():
             data['education'][index] = updated_education
             return jsonify(id=index, experience=updated_education), 200
 
-    if request.method == 'DELETE':
+        return jsonify({}), 404
+
+    def handle_delete():
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['education']):
             deleted_education = data['education'].pop(index)
             return jsonify(deleted_education), 200
 
-    return jsonify({}), 405
+        return jsonify({}), 404
+
+    handlers = {
+        'GET': handle_get,
+        'POST': handle_post,
+        'PUT': handle_put,
+        'DELETE': handle_delete
+    }
+    return handlers[request.method](), 405
 
 @app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
     '''
     Handles Skill requests
     '''
-    if request.method == 'GET':
+
+    def handle_get():
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['skill']):
             return jsonify(data['skill'][index])
         return jsonify(data['skill'])
 
-    if request.method == 'POST':
+    def handle_post():
         request_data = request.get_json()
         required_fields = ["name", "proficiency", "logo"]
         is_valid, error_mssg = validate_fields(required_fields, request_data)
@@ -143,18 +155,30 @@ def skill():
         except TypeError as e:
             return jsonify({"error": str(e)}), 400
 
-    if request.method == 'PUT':
+    def handle_put():
         request_data = request.get_json()
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['skill']):
             updated_skill = Education(**request_data)
             data['skill'][index] = updated_skill
             return jsonify(id=index, experience=updated_skill), 200
+        return jsonify({}), 404
 
-    if request.method == 'DELETE':
+    def handle_delete():
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['skill']):
             deleted_skill = data['skill'].pop(index)
             return jsonify(deleted_skill), 200
+        return jsonify({}), 404
+
+    methods = {
+        'GET': handle_get,
+        'POST': handle_post,
+        'PUT': handle_put,
+        'DELETE': handle_delete
+    }
+    handler = methods.get(request.method)
+    if handler:
+        return handler()
 
     return jsonify({}), 405
