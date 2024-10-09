@@ -47,34 +47,53 @@ def hello_world():
     '''
     return jsonify({"message": "Hello, World!"})
 
-
-@app.route('/resume/experience', methods=['GET', 'POST'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'DELETE'])
 def experience():
     '''
     Handle experience requests
     '''
+    response = {}
+    status_code = 405
+
     if request.method == 'GET':
         index = request.args.get('index', type=int)
         if index is not None and 0 <= index < len(data['experience']):
-            return jsonify(data['experience'][index])
-        return jsonify(data['experience'])
+            response = jsonify(data['experience'][index])
+            status_code = 201
+        else:
+            response = jsonify(data['experience'])
+            status_code = 400
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         request_data = request.get_json()
         required_fields = ["title", "company", "start_date", "end_date", "description", "logo"]
         is_valid, error_mssg = validate_fields(required_fields, request_data)
 
         if not is_valid:
-            return jsonify({"error": error_mssg}), 400
+            response = jsonify({"error": error_mssg})
+            status_code = 400
+        else:
+            try:
+                new_experience = Experience(**request_data)
+                data["experience"].append(new_experience)
+                response = jsonify(experience=new_experience, id=len(data['experience'])-1)
+                status_code = 201
+            except TypeError as e:
+                response = jsonify({"error": str(e)})
+                status_code = 400
 
-        try:
-            new_experience = Experience(**request_data)
-            data["experience"].append(new_experience)
-            return jsonify(experience=new_experience, id=len(data['experience'])-1), 201
-        except TypeError as e:
-            return jsonify({"error": str(e)}), 400
+    elif request.method == 'DELETE':
+        experience_id = request.get_json()
 
-    return jsonify({}), 405
+        if experience_id < 0 or experience_id >= len(data['experience']):
+            response = jsonify({"error": "Invalid ID"})
+            status_code = 404
+        else:
+            del data["experience"][experience_id]
+            response = jsonify(id=experience_id)
+            status_code = 204
+
+    return response, status_code
 
 @app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():
