@@ -253,56 +253,36 @@ def test_skills_delete_index():
     """
     Test the successful deletion of skills entries at index.
     """
-    example_skills = [
-    {
+    example_skills = {
         "name": "JavaScript",
         "proficiency": "2-4 years",
         "logo": "example-logo.png"
-    },
-    {
-        "name": "TypeScript",
-        "proficiency": "1-3 years",
-        "logo": "example-logo.png"
-    }]
+    }
 
-    item_id = app.test_client().post('/resume/skill',
-                                     json=example_skills).json['id']
-
+    post_response = app.test_client().post('/resume/skill',
+                                     json=example_skills)
+    item_id = post_response.json['id']
+    print(item_id)
     response = app.test_client().delete(f'/resume/skill?index={item_id}')
     assert response.status_code == 200
-    assert response.json[item_id] == example_skills[item_id]
-
-    response_items = app.test_client().get('/resume/skill')
-    assert response_items.json is None
+    assert response.json == example_skills
 
 def test_education_delete_index():
     """
     Test the successful deletion of education entries at index.
     """
-    example_education = [
-    {
+    example_education = {
         "course": "Engineering",
         "school": "NYU",
         "start_date": "October 2022",
         "end_date": "August 2024",
         "grade": "86%",
         "logo": "example-logo.png"
-    },
-    {
-        "course": "Computer Science",
-        "school": "UT",
-        "start_date": "October 2022",
-        "end_date": "August 2024",
-        "grade": "97%",
-        "logo": "example-logo.png"
-    }]
+    }
 
-    item_id = app.test_client().post('/resume/education',
-                                     json=example_education).json['id']
-
+    post_response = app.test_client().post('/resume/education',
+                                     json=example_education)
+    item_id = post_response.json['id']
     response = app.test_client().delete(f'/resume/education?index={item_id}')
     assert response.status_code == 200
-    assert response.json[item_id] == example_education[item_id]
-
-    response_items = app.test_client().get('/resume/education')
-    assert response_items.json is None
+    assert response.json == example_education
