@@ -47,7 +47,7 @@ def hello_world():
     '''
     return jsonify({"message": "Hello, World!"})
 
-@app.route('/resume/experience', methods=['GET', 'POST', 'DELETE'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def experience():
     '''
     Handle experience requests
@@ -81,6 +81,21 @@ def experience():
             except TypeError as e:
                 response = jsonify({"error": str(e)})
                 status_code = 400
+
+    elif request.method == 'PUT':
+        request_data = request.get_json()
+        experience_id = request_data["id"]
+
+        # Ensure the experience list is large enough to accommodate the ID
+        if experience_id >= len(data['experience']):
+            return jsonify({"error": "Invalid ID"}), 404
+
+        # Update the experience entry at the specified index
+        updated_experience = Experience(**request_data['experience'])
+        data['experience'][experience_id] = updated_experience
+
+        response = jsonify(id=experience_id, experience=updated_experience)
+        status_code = 200
 
     elif request.method == 'DELETE':
         experience_id = request.get_json()

@@ -33,6 +33,39 @@ def test_experience():
     response = app.test_client().get('/resume/experience')
     assert response.json[item_id] == example_experience
 
+def test_edit_experience():
+    '''
+    Add a new experience, then edit it and get the updated experience. 
+    
+    Check that the updated experience is returned
+    '''
+    example_experience = {
+        "title": "Software Developer",
+        "company": "A Cooler Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
+
+    post_response = app.test_client().post('/resume/experience',
+                                     json=example_experience)
+    item_id = post_response.json['id']
+
+    updated_experience = {
+        "title": "Senior Software Developer",
+        "company": "A Cooler Company",
+        "start_date": "October 2024",
+        "end_date": "Present",
+        "description": "Writing complex JavaScript Code",
+        "logo": "example-logo.png"
+    }
+    put_json = {"experience": updated_experience, "id": item_id}
+    response = app.test_client().put('/resume/experience', json=put_json)
+    assert response.json['experience'] == updated_experience
+    assert response.json['id'] == item_id
+    assert response.status_code == 200
+
 def test_experience_delete():
     """
     Test the successful deletion of an experience entries.
@@ -45,6 +78,7 @@ def test_experience_delete():
         "description": "Writing JavaScript Code",
         "logo": "example-logo.png"
     }
+
     post_response = app.test_client().post('/resume/experience',
                                      json=example_experience)
     item_id = post_response.json['id']
